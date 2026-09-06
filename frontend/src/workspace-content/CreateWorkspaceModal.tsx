@@ -10,7 +10,8 @@ import {
   TextField,
 } from '@mui/material';
 import { useAppDispatch } from '../store/hooks';
-import { changeSelectedWorkspace, fetchWorkspaces } from '../store/workspaceSlice';
+import { fetchWorkspaces } from '../store/workspaceSlice';
+import { useNavigate } from "react-router";
 
 type CreateWorkspaceModalProps = {
   open: boolean;
@@ -22,6 +23,7 @@ const CreateWorkspaceModal = ({ open, onClose }: CreateWorkspaceModalProps) => {
   const [name, setName] = useState('');
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   const handleClose = () => {
     if (!isSaving) {
@@ -53,12 +55,12 @@ const CreateWorkspaceModal = ({ open, onClose }: CreateWorkspaceModalProps) => {
       }
 
       setName('');
-      onClose();
       const newWorkspace = await response.json();
       if (newWorkspace?.id) {
-        dispatch(changeSelectedWorkspace(newWorkspace.id));
+        navigate(`/workspaces/${newWorkspace?.id}`)
       }
       dispatch(fetchWorkspaces());
+      onClose();
     } catch (requestError) {
       setError(
         requestError instanceof Error

@@ -15,6 +15,7 @@ import {
   fetchWorkspaces,
 } from '../store/workspaceSlice';
 import CreateWorkspaceModal from './CreateWorkspaceModal';
+import FileUploadSection from '../file-upload-section/FileUploadSection';
 import { useParams } from 'react-router';
 
 const WorkspaceContent = () => {
@@ -117,11 +118,7 @@ const WorkspaceContent = () => {
       </Stack>;
     }
 
-    return <Container>
-      <Stack spacing={2} component="div" sx={{textAlign: 'center' }}>
-        
-      </Stack>
-    </Container>;
+    return <Container maxWidth="md"><FileUploadSection workspace={selectedWorkspace} /></Container>;
   };
 
   const renderSuccessContent = () => {
@@ -155,7 +152,7 @@ const WorkspaceContent = () => {
       {selectedWorkspacePollState === 'failed' && (
         <Typography color="error">{selectedWorkspacePollError}</Typography>
       )}
-      {workspaceFetchStatus === 'success' && renderSuccessContent()}
+      {selectedWorkspacePollState !== 'failed' && workspaceFetchStatus === 'success' && renderSuccessContent()}
       <CreateWorkspaceModal
         open={isCreateWorkspaceOpen}
         onClose={() => setIsCreateWorkspaceOpen(false)}
