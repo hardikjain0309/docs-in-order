@@ -45,13 +45,13 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
 
 const HomePage = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const { workspaces, workspaceFetchStatus } = useAppSelector(
+  const { workspaceFetchStatus } = useAppSelector(
     (state) => state.workspace,
   );
 
   const showSideNav = useMemo(() => {
-    return workspaceFetchStatus === 'success' && workspaces.length > 0;
-  }, [workspaceFetchStatus, workspaces.length]);
+    return workspaceFetchStatus === 'success';
+  }, [workspaceFetchStatus]);
 
   const theme = useTheme();
 

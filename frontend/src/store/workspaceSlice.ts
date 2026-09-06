@@ -14,12 +14,14 @@ type WorkspaceState = {
   workspaces: Workspace[];
   workspacesFetchError: string | null;
   workspaceFetchStatus: WorkspaceFetchStatus;
+  selectedWorkspaceId: string | null;
 };
 
 const initialState: WorkspaceState = {
   workspaces: [],
   workspacesFetchError: null,
   workspaceFetchStatus: AsyncThunkStatus.Idle,
+  selectedWorkspaceId: null,
 };
 
 export const fetchWorkspaces = createAsyncThunk<
@@ -47,6 +49,9 @@ const workspaceSlice = createSlice({
   name: 'workspace',
   initialState,
   reducers: {
+    changeSelectedWorkspace: (state, action: PayloadAction<string | null>) => {
+      state.selectedWorkspaceId = action.payload;
+    },
     clearWorkspaceError: (state) => {
       state.workspacesFetchError = null;
       state.workspaceFetchStatus = AsyncThunkStatus.Idle;
@@ -70,5 +75,5 @@ const workspaceSlice = createSlice({
   },
 });
 
-export const { clearWorkspaceError } = workspaceSlice.actions;
+export const { changeSelectedWorkspace, clearWorkspaceError } = workspaceSlice.actions;
 export default workspaceSlice.reducer;

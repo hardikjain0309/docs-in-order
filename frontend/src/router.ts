@@ -10,6 +10,10 @@ export const router = createBrowserRouter([
       {
         path: "/",
         Component: WorkspaceContent
+      },
+      {
+        path: "/workspaces/:workspaceId",
+        Component: WorkspaceContent
       }
     ]
   }
