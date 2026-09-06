@@ -7,8 +7,22 @@ generator client {
   output = "./generated"
 }
 
+enum WorkspaceState {
+  DRAFT
+  FILES_UPLOADED
+  PARSING_COMPLETED
+  EXTRACTION_COMPLETED
+  SCHEMA_INFERRED
+  USER_CONFIRMED_SCHEMA
+  MAPPING_VALIDATION_COMPLETED
+  COMPLETED
+}
+
 model workspace {
   id String @db.Uuid() @default(uuid()) @unique
   createdAt DateTime @default(now())
   name String @default("New Workspace")
+  state     WorkspaceState
+  error     Json?
+  updatedAt DateTime      @updatedAt
 }
