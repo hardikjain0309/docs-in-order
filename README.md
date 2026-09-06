@@ -1,25 +1,18 @@
-# Life Tracker
+## Problem Statement
 
-A simple app that someone can use to track their time daily to enable accountability and build new habits intentfully. Combining both time and habit tracking at the same place with features like:
+Turn messy documents into structured, queryable data
 
+Build a system that takes unstructured or semi-structured documents and converts them into clean, structured data that can be searched and queried.
 
-* Create activities with an optional Habit tag
-* Categorize activities into customizable buckets like Work, Hobbies, Upskill, Fitness, Rest etc. 
-* Start timers to track activities
-* View trends like time spent in activities and categories, habit streaks
-* Schedule activities through a calendar
+## Tech Stack
 
-## Tech stack
-### Frontend
+- **Backend Framework:** NestJS
+- **DB:** PostgreSQL
+- **ORM:** Prisma
+- **Frontend Frameword:** React
+- **Component Library:** MaterialUI
+- **Frontend State Management:** Redux ToolKit
+- **Language:** Typescript
 
-* React
-* Redux
-* TypeScript
-
-### Backend
-
-* NestJS
-* Prisma
-* PostgreSQL
-* JWT
-* bcrypt
+## Decisions file
+[decisions.md](./decisions.md)
