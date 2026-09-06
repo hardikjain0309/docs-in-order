@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import Box from '@mui/material/Box';
 import { styled } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
@@ -45,13 +45,13 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
 
 const HomePage = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const { workspaceFetchStatus } = useAppSelector(
+  const { workspaceFetchStatus, workspaces } = useAppSelector(
     (state) => state.workspace,
   );
 
   const showSideNav = useMemo(() => {
-    return workspaceFetchStatus === 'success';
-  }, [workspaceFetchStatus]);
+    return workspaceFetchStatus === 'success' && workspaces.length > 0;
+  }, [workspaceFetchStatus, workspaces.length]);
 
   const theme = useTheme();
 
@@ -60,6 +60,12 @@ const HomePage = () => {
   const toggleColorMode = () => {
     setMode(mode === 'dark' ? 'light' : 'dark');
   };
+
+  useEffect(() => {
+    if (showSideNav) {
+      setTimeout(() => setIsSidebarOpen(true));
+    }
+  }, [showSideNav])
 
   return (
     

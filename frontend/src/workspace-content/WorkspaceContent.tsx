@@ -94,8 +94,17 @@ const WorkspaceContent = () => {
     </Box>;
   };
 
+  const renderWorkspaceHeader = () => {
+    if (selectedWorkspace) {
+      return <Typography variant="h5" component="h1" sx={{ mb: 2 }}>
+        Workspace: {selectedWorkspace.name}
+      </Typography>;
+    }
+    return null;
+  }
+
   const renderFirstRunExperience = () => {
-    return <Container>
+    return <Container sx={{minHeight: "300px"}}>
       <Stack spacing={2} component="div" sx={{textAlign: 'center' }}>
         <Typography variant="body1" color="text.primary" align="center">
           Create a new workspace to get started.
@@ -118,7 +127,10 @@ const WorkspaceContent = () => {
       </Stack>;
     }
 
-    return <Container maxWidth="md"><FileUploadSection workspace={selectedWorkspace} /></Container>;
+    return <>
+      { renderWorkspaceHeader() }
+      <Container maxWidth="md"><FileUploadSection workspace={selectedWorkspace} /></Container>;
+    </>
   };
 
   const renderSuccessContent = () => {
@@ -128,20 +140,8 @@ const WorkspaceContent = () => {
     return renderWorkspaceContent();
   }
 
-  const renderWorkspaceHeader = () => {
-    if (selectedWorkspace) {
-      return <Typography variant="h5" component="h1" sx={{ mb: 2 }}>
-        Workspace: {selectedWorkspace.name}
-      </Typography>;
-    }
-    return <Typography sx={{ mb: 3, color: "text.secondary", textAlign: "center" }}>
-        Upload your documents to convert them into a searchable, filterable knowledge base.
-    </Typography>;
-  }
-
   return (
     <Box sx={{ p: 3 }}>
-      { renderWorkspaceHeader() }
       {workspaceFetchStatus === 'loading' && <Typography>Loading workspaces...</Typography>}
       {workspaceFetchStatus === 'failed' && (
         <Typography color="error">{workspacesFetchError}</Typography>
@@ -152,7 +152,7 @@ const WorkspaceContent = () => {
       {selectedWorkspacePollState === 'failed' && (
         <Typography color="error">{selectedWorkspacePollError}</Typography>
       )}
-      {selectedWorkspacePollState !== 'failed' && workspaceFetchStatus === 'success' && renderSuccessContent()}
+      {(selectedWorkspacePollState !== 'failed' && workspaceFetchStatus === 'success') && renderSuccessContent()}
       <CreateWorkspaceModal
         open={isCreateWorkspaceOpen}
         onClose={() => setIsCreateWorkspaceOpen(false)}

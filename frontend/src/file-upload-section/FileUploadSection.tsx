@@ -331,6 +331,9 @@ const FileUploadSection = ({ workspace }: FileUploadSectionProps) => {
 
 	return (
 		<>
+      <Typography sx={{ mb: 3, color: "text.secondary", textAlign: "center" }}>
+          Upload your documents to convert them into a searchable, filterable knowledge base.
+      </Typography>
 			{isDraft && !isUploading && (
 				<Paper
 					variant="outlined"
