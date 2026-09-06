@@ -138,6 +138,12 @@ controlling this output by only supporting a pre-defined set of transformations
 #### Workspace CRUD API
 Workspace is the identifier for a document processing workflow. Each enitity related to a workflow will get a workspaceID.
 
+List: GET /api/v1/workspaces
+Create: POST /api/v1/workspaces
+Get by ID: GET /api/v1/workspaces/:workspaceId
+Update: PUT /api/v1/workspaces/:workspaceId
+Delete: DELETE /api/v1/workspaces/:workspaceId
+
 
 
 

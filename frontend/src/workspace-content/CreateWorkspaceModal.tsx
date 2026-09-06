@@ -10,7 +10,7 @@ import {
   TextField,
 } from '@mui/material';
 import { useAppDispatch } from '../store/hooks';
-import { fetchWorkspaces } from '../store/workspaceSlice';
+import { changeSelectedWorkspace, fetchWorkspaces } from '../store/workspaceSlice';
 
 type CreateWorkspaceModalProps = {
   open: boolean;
@@ -26,6 +26,7 @@ const CreateWorkspaceModal = ({ open, onClose }: CreateWorkspaceModalProps) => {
   const handleClose = () => {
     if (!isSaving) {
       setName('');
+      setError(null);
       onClose();
     }
   };
@@ -53,6 +54,10 @@ const CreateWorkspaceModal = ({ open, onClose }: CreateWorkspaceModalProps) => {
 
       setName('');
       onClose();
+      const newWorkspace = await response.json();
+      if (newWorkspace?.id) {
+        dispatch(changeSelectedWorkspace(newWorkspace.id));
+      }
       dispatch(fetchWorkspaces());
     } catch (requestError) {
       setError(
@@ -70,6 +75,11 @@ const CreateWorkspaceModal = ({ open, onClose }: CreateWorkspaceModalProps) => {
       <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
         <DialogTitle>Create New Workspace</DialogTitle>
         <DialogContent>
+          {error && (
+            <Alert severity="error" sx={{ mt: 1, mb: 1 }}>
+              {error}
+            </Alert>
+          )}
           <TextField
             autoFocus
             fullWidth
@@ -93,6 +103,8 @@ const CreateWorkspaceModal = ({ open, onClose }: CreateWorkspaceModalProps) => {
         open={Boolean(error)}
         autoHideDuration={5000}
         onClose={() => setError(null)}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        sx={{ zIndex: (theme) => theme.zIndex.modal + 1 }}
       >
         <Alert severity="error" onClose={() => setError(null)}>
           {error}
