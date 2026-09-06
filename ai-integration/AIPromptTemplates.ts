@@ -1,0 +1,2 @@
+export const ExtractRecordsAndMetadataPrompt = "Extract metadata and records from AST of a file <payload>";
+export const ClassifyEntityTypesAndConsolidateSchemasPrompt = "Classify these entity schemas obtained from extracting records from different files to obtain canonical schemas with mappings from original schema to the canonical schema preserving source file names <payload>";

@@ -1,0 +1,74 @@
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import type { PayloadAction } from '@reduxjs/toolkit';
+import { AsyncThunkStatus, type AsyncThunkStatusValue } from './reduxTypes';
+
+export type Workspace = {
+  id: string;
+  name: string;
+  createdAt: string;
+};
+
+export type WorkspaceFetchStatus = AsyncThunkStatusValue;
+
+type WorkspaceState = {
+  workspaces: Workspace[];
+  workspacesFetchError: string | null;
+  workspaceFetchStatus: WorkspaceFetchStatus;
+};
+
+const initialState: WorkspaceState = {
+  workspaces: [],
+  workspacesFetchError: null,
+  workspaceFetchStatus: AsyncThunkStatus.Idle,
+};
+
+export const fetchWorkspaces = createAsyncThunk<
+  Workspace[],
+  void,
+  { rejectValue: string }
+>('workspace/fetchWorkspaces', async (_, thunkAPI) => {
+  try {
+    const response = await fetch('/api/v1/workspaces');
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch workspaces');
+    }
+
+    const data = (await response.json()) as Workspace[];
+    return data;
+  } catch (error) {
+    return thunkAPI.rejectWithValue(
+      error instanceof Error ? error.message : 'Failed to fetch workspaces',
+    );
+  }
+});
+
+const workspaceSlice = createSlice({
+  name: 'workspace',
+  initialState,
+  reducers: {
+    clearWorkspaceError: (state) => {
+      state.workspacesFetchError = null;
+      state.workspaceFetchStatus = AsyncThunkStatus.Idle;
+    },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchWorkspaces.pending, (state) => {
+        state.workspaceFetchStatus = AsyncThunkStatus.Loading;
+        state.workspacesFetchError = null;
+      })
+      .addCase(fetchWorkspaces.fulfilled, (state, action: PayloadAction<Workspace[]>) => {
+        state.workspaces = action.payload;
+        state.workspaceFetchStatus = AsyncThunkStatus.Success;
+        state.workspacesFetchError = null;
+      })
+      .addCase(fetchWorkspaces.rejected, (state, action) => {
+        state.workspaceFetchStatus = AsyncThunkStatus.Failed;
+        state.workspacesFetchError = action.payload ?? 'Failed to fetch workspaces';
+      });
+  },
+});
+
+export const { clearWorkspaceError } = workspaceSlice.actions;
+export default workspaceSlice.reducer;

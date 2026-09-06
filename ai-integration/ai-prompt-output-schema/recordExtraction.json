@@ -1,0 +1,110 @@
+{
+  "type": "object",
+  "properties": {
+    "metadata": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string",
+            "description": "Label of the metadata value"
+          },
+          "value": {
+            "type": "string",
+            "description": "Metadata value"
+          }
+        },
+        "propertyOrdering": [
+          "label",
+          "value"
+        ]
+      },
+      "description": "Metadata extracted from document headers, footers, or other document-level information."
+    },
+    "entity_types": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Generic name of the entity type, such as Expense, Invoice, or Employee."
+          },
+          "schema": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Field name."
+                },
+                "data_type": {
+                  "type": "string",
+                  "description": "Data type of the field, such as string, number, date, boolean, or currency."
+                }
+              },
+              "propertyOrdering": [
+                "name",
+                "data_type"
+              ]
+            },
+            "description": "Fields belonging to this entity type."
+          }
+        },
+        "propertyOrdering": [
+          "name",
+          "schema"
+        ]
+      },
+      "description": "Entity types identified in the document and their inferred schemas."
+    },
+    "records": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "entity_type": {
+            "type": "string",
+            "description": "Name of the entity type this record belongs to. Must reference an entity type defined in entity_types."
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "field": {
+                  "type": "string",
+                  "description": "Reference to field in entity_types schema"
+                },
+                "value": {
+                  "type": "string",
+                  "description": "Value of the field for this record"
+                }
+              },
+              "propertyOrdering": [
+                "field",
+                "value"
+              ],
+              "required": [
+                "field",
+                "value"
+              ]
+            },
+            "description": "The extracted field values for this record."
+          }
+        },
+        "propertyOrdering": [
+          "entity_type",
+          "data"
+        ]
+      }
+    }
+  },
+  "propertyOrdering": [
+    "metadata",
+    "entity_types",
+    "records"
+  ]
+}

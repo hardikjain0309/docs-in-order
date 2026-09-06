@@ -1,0 +1,56 @@
+@base_url=http://localhost:4000
+
+###
+POST {{base_url}}/auth/signup
+
+###
+POST {{base_url}}/auth/signup
+Content-Type: application/json
+
+{
+  "name": "Hardik Jain",
+  "email": "hardik.j0309@gmail.com",
+  "password": "password"
+}
+
+###
+POST {{base_url}}/auth/token
+
+###
+POST {{base_url}}/auth/token
+Content-Type: application/json
+
+{
+  "grantType": "password",
+  "email": "hardik.j0309@gmail.com"
+}
+
+###
+POST {{base_url}}/auth/token
+Content-Type: application/json
+
+{
+  "grantType": "password",
+  "email": "hardik.j0309@gmail.com",
+  "password": "password"
+}
+
+###
+
+POST {{base_url}}/auth/token
+Content-Type: application/json
+
+{
+  "grantType": "refresh_token",
+  "refreshToken": "ffd08a77-f6e8-49da-8527-7d53f3c8b0f2.6367ad86-6603-4bbc-b6b6-4cdf693e129f"
+}
+
+###
+
+POST {{base_url}}/auth/token
+Content-Type: application/json
+
+{
+  "grantType": "refresh_token",
+  "refreshToken": "xyz"
+}

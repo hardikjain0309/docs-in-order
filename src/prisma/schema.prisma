@@ -1,0 +1,14 @@
+datasource db {
+  provider = "postgresql"
+}
+
+generator client {
+  provider = "prisma-client"
+  output = "./generated"
+}
+
+model workspace {
+  id String @db.Uuid() @default(uuid()) @unique
+  createdAt DateTime @default(now())
+  name String @default("New Workspace")
+}
