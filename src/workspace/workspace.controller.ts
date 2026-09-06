@@ -18,7 +18,9 @@ export class WorkspaceController {
 
   @Post()
   create(@Body() createWorkspaceDto: CreateWorkspaceDto) {
-    return this.workspaceService.create(createWorkspaceDto);
+    return this.workspaceService.create({
+      name: createWorkspaceDto.name,
+    });
   }
 
   @Get()

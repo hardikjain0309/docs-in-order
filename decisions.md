@@ -144,6 +144,21 @@ Get by ID: GET /api/v1/workspaces/:workspaceId
 Update: PUT /api/v1/workspaces/:workspaceId
 Delete: DELETE /api/v1/workspaces/:workspaceId
 
+#### File Upload and List API
+Files module is responsible for uploading files for a workspace and listing uploaded files
+
+Files List: GET /api/v1/workspaces/:workspaceId/files
+Files Upload: POST /api/v1/workspaces/:workspaceId/files
+
+##### Upload imitations
+Max file size: 10MB
+Max file count: 10
+
+###### Reasoning
+Files are not being persisted in a files storage since a files server deployment can be costly hence all files are being stored in memory itself which creates performance and scalability bottlenecks but that's a tradeoff for cost for MVP
+
+
+
 
 
 

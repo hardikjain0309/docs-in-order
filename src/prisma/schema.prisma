@@ -4,7 +4,7 @@ datasource db {
 
 generator client {
   provider = "prisma-client"
-  output = "./generated"
+  output   = "./generated"
 }
 
 enum WorkspaceState {
@@ -19,10 +19,22 @@ enum WorkspaceState {
 }
 
 model workspace {
-  id String @db.Uuid() @default(uuid()) @unique
-  createdAt DateTime @default(now())
-  name String @default("New Workspace")
-  state     WorkspaceState
+  id        String         @unique @default(uuid()) @db.Uuid()
+  createdAt DateTime       @default(now())
+  name      String         @default("New Workspace")
+  state     WorkspaceState @default(DRAFT)
   error     Json?
-  updatedAt DateTime      @updatedAt
+  updatedAt DateTime       @updatedAt
+  files     file[]
+}
+
+model file {
+  id          String   @unique @default(uuid()) @db.Uuid()
+  workspaceId String   @db.Uuid()
+  name        String
+  size        Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  workspace workspace @relation(fields: [workspaceId], references: [id])
 }

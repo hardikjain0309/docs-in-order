@@ -1,8 +1,17 @@
-import { Box, Button, Container, Stack, Typography } from '@mui/material';
-import { useEffect, useState } from 'react';
+import {
+  Alert,
+  Box,
+  Button,
+  Container,
+  Snackbar,
+  Stack,
+  Typography,
+} from '@mui/material';
+import { useEffect, useRef, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import {
   changeSelectedWorkspace,
+  fetchWorkspaceById,
   fetchWorkspaces,
 } from '../store/workspaceSlice';
 import CreateWorkspaceModal from './CreateWorkspaceModal';
@@ -10,13 +19,18 @@ import { useParams } from 'react-router';
 
 const WorkspaceContent = () => {
   const [isCreateWorkspaceOpen, setIsCreateWorkspaceOpen] = useState(false);
+  const [pollToast, setPollToast] = useState<string | null>(null);
+  const pollAttemptedRef = useRef(false);
+  const pollInFlightRef = useRef(false);
   const dispatch = useAppDispatch();
   const { workspaceFetchStatus, workspacesFetchError, workspaces, selectedWorkspaceId } =
     useAppSelector((state) => state.workspace);
+  const {
+    selectedWorkspace,
+    selectedWorkspacePollState,
+    selectedWorkspacePollError,
+  } = useAppSelector((state) => state.workspace);
   const { workspaceId } = useParams<{ workspaceId: string }>();
-  const selectedWorkspace = useAppSelector((state) =>
-    state.workspace.workspaces.find((workspace) => workspace.id === selectedWorkspaceId)
-  );
 
   useEffect(() => {
     dispatch(fetchWorkspaces());
@@ -25,6 +39,46 @@ const WorkspaceContent = () => {
   useEffect(() => {
     dispatch(changeSelectedWorkspace(workspaceId ?? null));
   }, [dispatch, workspaceId]);
+
+  useEffect(() => {
+    if (!workspaceId || workspaceId !== selectedWorkspaceId) {
+      return;
+    }
+
+    let isActive = true;
+    pollAttemptedRef.current = false;
+    pollInFlightRef.current = false;
+
+    const pollWorkspace = async () => {
+      if (pollInFlightRef.current) {
+        return;
+      }
+
+      pollInFlightRef.current = true;
+      try {
+        await dispatch(fetchWorkspaceById(workspaceId)).unwrap();
+      } catch (error) {
+        if (isActive && pollAttemptedRef.current) {
+          setPollToast(
+            typeof error === 'string' ? error : 'Failed to refresh workspace',
+          );
+        }
+      } finally {
+        pollAttemptedRef.current = true;
+        pollInFlightRef.current = false;
+      }
+    };
+
+    void pollWorkspace();
+    const pollInterval = window.setInterval(() => {
+      void pollWorkspace();
+    }, 2000);
+
+    return () => {
+      isActive = false;
+      window.clearInterval(pollInterval);
+    };
+  }, [dispatch, selectedWorkspaceId, workspaceId]);
 
   const renderCreateWorkspaceButton = () => {
     return <Box>
@@ -95,11 +149,27 @@ const WorkspaceContent = () => {
       {workspaceFetchStatus === 'failed' && (
         <Typography color="error">{workspacesFetchError}</Typography>
       )}
+      {selectedWorkspacePollState === 'loading' && (
+        <Typography>Loading workspace...</Typography>
+      )}
+      {selectedWorkspacePollState === 'failed' && (
+        <Typography color="error">{selectedWorkspacePollError}</Typography>
+      )}
       {workspaceFetchStatus === 'success' && renderSuccessContent()}
       <CreateWorkspaceModal
         open={isCreateWorkspaceOpen}
         onClose={() => setIsCreateWorkspaceOpen(false)}
       />
+      <Snackbar
+        open={Boolean(pollToast)}
+        autoHideDuration={5000}
+        onClose={() => setPollToast(null)}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert severity="error" onClose={() => setPollToast(null)}>
+          {pollToast}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };

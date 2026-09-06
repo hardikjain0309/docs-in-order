@@ -1,0 +1,22 @@
+GET http://localhost:4000/api/v1/workspaces
+
+###
+
+POST http://localhost:4000/api/v1/workspaces/6bde5f1a-c21d-4e22-9485-4a4e0d84e9fb/files/upload
+Content-Type: multipart/form-data; boundary=boundary123
+
+--boundary123
+Content-Disposition: form-data; name="files"; filename="Apr2026_Billedstatements_0372_01-05-26_11-30.pdf"
+Content-Type: application/octet-stream
+
+< /Users/hardik.jain/Downloads/Apr2026_Billedstatements_0372_01-05-26_11-30.pdf
+--boundary123
+Content-Disposition: form-data; name="files"; filename="Aug2026_Billedstatements_0372_05-09-26_13-17.xlsx"
+Content-Type: application/octet-stream
+
+< /Users/hardik.jain/Downloads/Aug2026_Billedstatements_0372_05-09-26_13-17.xlsx
+--boundary123--
+###
+
+GET http://localhost:4000/api/v1/workspaces/6bde5f1a-c21d-4e22-9485-4a4e0d84e9fb/files
+###

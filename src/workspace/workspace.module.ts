@@ -7,5 +7,6 @@ import { WorkspaceService } from "./workspace.service.js";
   imports: [PrismaModule],
   controllers: [WorkspaceController],
   providers: [WorkspaceService],
+  exports: [WorkspaceService],
 })
 export default class WorkspaceModule {}
