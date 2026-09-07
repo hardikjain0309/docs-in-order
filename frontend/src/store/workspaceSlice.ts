@@ -7,6 +7,7 @@ export type Workspace = {
   name: string;
   createdAt: string;
   state: string;
+  error: unknown;
 };
 
 export type WorkspaceFetchStatus = AsyncThunkStatusValue;

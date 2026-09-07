@@ -40,12 +40,16 @@ export default class FileProcessingService {
         }
       }),
     );
+
+    // Transition workspace to parsing completed
     await this.workspaceService.transitionToParsingCompleted(workspaceId, {
       errors: parseErrors,
     });
     if (parseErrors.length > 0) {
       return;
     }
+
+    // Extract records and metadata from files
     const extractionResultsMap: Record<
       string,
       RecordExtractionOutputStructure
@@ -77,6 +81,7 @@ export default class FileProcessingService {
     );
 
     if (extractionErrors.length > 0) {
+      // Transition to extraction completed state with errors
       await this.workspaceService.transitionToExtractionCompleted(workspaceId, {
         errors: extractionErrors,
       });
@@ -88,6 +93,7 @@ export default class FileProcessingService {
       extractionResultsMap,
     );
 
+    // Store extracted records and metadata in DB
     const rawData = Object.entries(extractionResultsMap).reduce(
       (aggregate, [sourceFile, extractionResult]) => {
         aggregate.metadata.push(
@@ -138,6 +144,10 @@ export default class FileProcessingService {
       },
     });
 
+    // Transition state to extraction completed
+    await this.workspaceService.transitionToExtractionCompleted(workspaceId);
+
+    // Infer canonical schemas from extracted records
     const schemaInferencePayload: SchemaInferencePromptPayload[] =
       files.flatMap((file) => {
         const extractionResult = extractionResultsMap[file.originalname];
@@ -162,6 +172,7 @@ export default class FileProcessingService {
     }
 
     if (schemaInferenceError) {
+      // Transition to schema inferred with error
       await this.workspaceService.transitionToSchemaInferred(workspaceId, {
         errors: [
           {
@@ -181,6 +192,7 @@ export default class FileProcessingService {
       inferredSchemas,
     );
 
+    // Store inferred schemas in DB
     await this.prisma.$transaction(async (transaction) => {
       await transaction.schema.deleteMany({ where: { workspaceId } });
       if (inferredSchemas.schemas.length > 0) {
@@ -199,6 +211,7 @@ export default class FileProcessingService {
       }
     });
 
+    // Transition to schema inferred
     await this.workspaceService.transitionToSchemaInferred(workspaceId);
   }
 

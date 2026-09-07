@@ -16,6 +16,7 @@ import {
 } from '../store/workspaceSlice';
 import CreateWorkspaceModal from './CreateWorkspaceModal';
 import FileUploadSection from '../file-upload-section/FileUploadSection';
+import ProcessingStageStatus from '../processing-stage-status/ProcessingStageStatus';
 import { useParams } from 'react-router';
 
 const WorkspaceContent = () => {
@@ -129,7 +130,10 @@ const WorkspaceContent = () => {
 
     return <>
       { renderWorkspaceHeader() }
-      <Container maxWidth="md"><FileUploadSection workspace={selectedWorkspace} /></Container>
+      <Stack direction="column" spacing={2}>
+        <Container maxWidth="md"><FileUploadSection workspace={selectedWorkspace} /></Container>
+        <Container maxWidth="md"><ProcessingStageStatus workspace={selectedWorkspace} /></Container>
+      </Stack>
     </>
   }
 
