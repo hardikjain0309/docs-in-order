@@ -133,26 +133,57 @@ Add a transformation step before normalization which transforms fields as sugges
 
 controlling this output by only supporting a pre-defined set of transformations
 
+### NestJS Modules
+
+1. **Prisma:** Exports Prisma ORM for DB Operations
+1. **Workspace:** Handles CRUD operations, State transitions or any other operations on workspace entity
+1. **Files:** Handles files validation, upload, and listing files uploaded to a workspace
+1. **FileProcessing:** Primary orchestration engine which parses files, integrates with AI and processes extracted records
+
+### Workspace State Machine
+
+    DRAFT
+     ↓
+    FILES_UPLOADED
+     ↓
+    PARSING_COMPLETED
+     ↓
+    EXTRACTION_COMPLETED 
+     ↓
+    SCHEMA_INFERRED
+     ↓
+    USER_CONFIRMED_SCHEMA
+     ↓
+    MAPPING_VALIDATION_COMPLETED
+     ↓
+    COMPLETED
+
+#### Stage Failure Handling
+If a stage fails the workspace state will still be that stage's completed state but the error value of the workspace will be not null and will determine the reason for no further progress
+
+#### No retry mechanism
+**Reasoning**: User has a workaround to create a new workspace to retry upload. Retry needs persisting intermediate states of data processing which will consume DB resources. These can be cached but keeping this out of scope for MVP
+
 ### API design
 
 #### Workspace CRUD API
 Workspace is the identifier for a document processing workflow. Each enitity related to a workflow will get a workspaceID.
 
-List: GET /api/v1/workspaces
-Create: POST /api/v1/workspaces
-Get by ID: GET /api/v1/workspaces/:workspaceId
-Update: PUT /api/v1/workspaces/:workspaceId
-Delete: DELETE /api/v1/workspaces/:workspaceId
+- List: GET /api/v1/workspaces
+- Create: POST /api/v1/workspaces
+- Get by ID: GET /api/v1/workspaces/:workspaceId
+- Update: PUT /api/v1/workspaces/:workspaceId
+- Delete: DELETE /api/v1/workspaces/:workspaceId
 
 #### File Upload and List API
 Files module is responsible for uploading files for a workspace and listing uploaded files
 
-Files List: GET /api/v1/workspaces/:workspaceId/files
-Files Upload: POST /api/v1/workspaces/:workspaceId/files
+- Files List: GET /api/v1/workspaces/:workspaceId/files
+- Files Upload: POST /api/v1/workspaces/:workspaceId/files
 
 ##### Upload imitations
-Max file size: 10MB
-Max file count: 10
+- Max file size: 10MB
+- Max file count: 10
 
 ###### Reasoning
 Files are not being persisted in a files storage since a files server deployment can be costly hence all files are being stored in memory itself which creates performance and scalability bottlenecks but that's a tradeoff for cost for MVP

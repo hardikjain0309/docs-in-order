@@ -1,7 +1,10 @@
 import { Module } from "@nestjs/common";
 import FileProcessingService from "./fileProcessing.service.js";
+import WorkspaceModule from "../workspace/workspace.module.js";
+import AIIntegrationModule from "../ai-integration/ai-integration.module.js";
 
 @Module({
+  imports: [WorkspaceModule, AIIntegrationModule],
   providers: [FileProcessingService],
   exports: [FileProcessingService],
 })

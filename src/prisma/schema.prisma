@@ -26,6 +26,8 @@ model workspace {
   error     Json?
   updatedAt DateTime       @updatedAt
   files     file[]
+  schemas   schema[]
+  rawData   rawdata[]
 }
 
 model file {
@@ -37,4 +39,22 @@ model file {
   updatedAt   DateTime @updatedAt
 
   workspace workspace @relation(fields: [workspaceId], references: [id])
+}
+
+model schema {
+  id             String @unique @default(uuid()) @db.Uuid()
+  workspaceId    String @db.Uuid()
+  entityType     String
+  schema_fields  Json[] @default([])
+  field_mappings Json[] @default([])
+
+  workspace workspace @relation(fields: [workspaceId], references: [id])
+}
+
+model rawdata {
+  workspaceId String    @unique() @db.Uuid()
+  metadata    Json
+  records     Json[]    @default([])
+  entityTypes Json[]    @default([])
+  workspace   workspace @relation(fields: [workspaceId], references: [id])
 }

@@ -22,10 +22,6 @@ export class FilesController {
     @Param("workspaceId") workspaceId: string,
     @UploadedFiles() files: Express.Multer.File[],
   ) {
-    console.log(
-      "files",
-      files.map((file) => file.originalname),
-    );
     return this.filesService.uploadFiles(workspaceId, files);
   }
 

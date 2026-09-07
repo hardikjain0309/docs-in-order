@@ -111,7 +111,7 @@ const WorkspaceContent = () => {
         </Typography>
         {renderCreateWorkspaceButton()}
       </Stack>
-    </Container>;
+    </Container>
   };
 
   const renderWorkspaceContent = () => {
@@ -124,14 +124,14 @@ const WorkspaceContent = () => {
           or
         </Typography>
         { renderCreateWorkspaceButton() }
-      </Stack>;
+      </Stack>
     }
 
     return <>
       { renderWorkspaceHeader() }
-      <Container maxWidth="md"><FileUploadSection workspace={selectedWorkspace} /></Container>;
+      <Container maxWidth="md"><FileUploadSection workspace={selectedWorkspace} /></Container>
     </>
-  };
+  }
 
   const renderSuccessContent = () => {
     if (workspaces.length === 0) {

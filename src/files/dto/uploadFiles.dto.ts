@@ -1,6 +1,7 @@
+export interface FileError {
+  fileName: string;
+  errors: string[];
+}
 export interface FilesValidationResult {
-  errors: {
-    fileName: string;
-    errors: string[];
-  }[];
+  errors: FileError[];
 }

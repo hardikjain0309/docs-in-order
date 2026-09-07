@@ -40,22 +40,27 @@
                   "type": "string",
                   "description": "Reference to original entity name"
                 },
-                "sourceFile": {
+                "source_file": {
                   "type": "string",
                   "description": "Source file reference of the entity type"
                 },
-                "fieldName": {
+                "field_name": {
                   "type": "string",
                   "description": "Original field name"
                 },
-                "canonical_schema_fieldName": {
+                "canonical_schema_field_name": {
                   "type": "string",
                   "description": "Name of field in canonical schema that is same as this field"
                 }
               }
             }
           }
-        }
+        },
+        "required": [
+          "entity_type",
+          "canonical_schema",
+          "mappings"
+        ]
       }
     }
   }
