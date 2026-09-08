@@ -20,3 +20,8 @@ Content-Type: application/octet-stream
 
 GET http://localhost:4000/api/v1/workspaces/6bde5f1a-c21d-4e22-9485-4a4e0d84e9fb/files
 ###
+
+GET http://localhost:4000/api/v1/workspaces/c5902274-a3ec-470f-9ea1-f5f6b74d7b71/inferredschemas
+
+
+###

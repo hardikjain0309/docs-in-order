@@ -17,6 +17,8 @@ import schemaInferenceOutputStructure from "./ai-prompt-config/schemaInferenceOu
 
 @Injectable()
 export default class AIIntegrationService {
+  private static readonly model = "gemini-3.5-flash-lite";
+
   private static gemini = new GoogleGenAI({
     vertexai: false,
     apiKey: AppConfig.GEMINI_KEY,
@@ -34,13 +36,25 @@ export default class AIIntegrationService {
   }
 
   async extractRecordsFromFileAST(file: OfficeParserAST) {
-    const interaction = await AIIntegrationService.gemini.interactions.create({
-      model: "gemini-3.6-flash",
-      input: this.formatPromptTemplate(ExtractRecordsAndMetadataPrompt, file),
-      response_format: {
-        type: "text",
-        mime_type: "application/json",
-        schema: recordExtractionOutputSchema as Record<string, any>,
+    // const interaction = await AIIntegrationService.gemini.interactions.create({
+    //   model: AIIntegrationService.model,
+    //   input: ,
+    //   response_format: {
+    //     type: "text",
+    //     mime_type: "application/json",
+    //     schema: recordExtractionOutputSchema as Record<string, any>,
+    //   },
+    // });
+
+    const response = await AIIntegrationService.gemini.models.generateContent({
+      model: AIIntegrationService.model,
+      contents: this.formatPromptTemplate(
+        ExtractRecordsAndMetadataPrompt,
+        file,
+      ),
+      config: {
+        responseMimeType: "application/json",
+        responseJsonSchema: recordExtractionOutputSchema,
       },
     });
 
@@ -48,23 +62,35 @@ export default class AIIntegrationService {
       recordExtractionOutputSchema as Record<string, any>,
     );
     return outputSchema.parse(
-      JSON.parse(interaction.output_text),
+      JSON.parse(response.text),
     ) as RecordExtractionOutputStructure;
   }
 
   async inferSchemasFromExtractedRecords(
     payload: SchemaInferencePromptPayload[],
   ) {
-    const interaction = await AIIntegrationService.gemini.interactions.create({
-      model: "gemini-3.6-flash",
-      input: this.formatPromptTemplate(
+    // const interaction = await AIIntegrationService.gemini.interactions.create({
+    //   model: AIIntegrationService.model,
+    //   input: this.formatPromptTemplate(
+    //     ClassifyEntityTypesAndConsolidateSchemasPrompt,
+    //     payload,
+    //   ),
+    //   response_format: {
+    //     type: "text",
+    //     mime_type: "application/json",
+    //     schema: schemaInferenceOutputStructure as Record<string, any>,
+    //   },
+    // });
+
+    const response = await AIIntegrationService.gemini.models.generateContent({
+      model: AIIntegrationService.model,
+      contents: this.formatPromptTemplate(
         ClassifyEntityTypesAndConsolidateSchemasPrompt,
         payload,
       ),
-      response_format: {
-        type: "text",
-        mime_type: "application/json",
-        schema: schemaInferenceOutputStructure as Record<string, any>,
+      config: {
+        responseMimeType: "application/json",
+        responseJsonSchema: recordExtractionOutputSchema,
       },
     });
 
@@ -72,7 +98,7 @@ export default class AIIntegrationService {
       schemaInferenceOutputStructure as Record<string, any>,
     );
     return outputSchema.parse(
-      JSON.parse(interaction.output_text),
+      JSON.parse(response.text),
     ) as SchemaInferenceOutputStructure;
   }
 }

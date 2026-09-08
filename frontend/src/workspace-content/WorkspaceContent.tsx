@@ -25,7 +25,7 @@ const WorkspaceContent = () => {
   const pollAttemptedRef = useRef(false);
   const pollInFlightRef = useRef(false);
   const dispatch = useAppDispatch();
-  const { workspaceFetchStatus, workspacesFetchError, workspaces, selectedWorkspaceId } =
+  const { workspaceFetchStatus, workspacesFetchError, workspaces } =
     useAppSelector((state) => state.workspace);
   const {
     selectedWorkspace,
@@ -43,7 +43,7 @@ const WorkspaceContent = () => {
   }, [dispatch, workspaceId]);
 
   useEffect(() => {
-    if (!workspaceId || workspaceId !== selectedWorkspaceId) {
+    if (!workspaceId) {
       return;
     }
 
@@ -80,7 +80,7 @@ const WorkspaceContent = () => {
       isActive = false;
       window.clearInterval(pollInterval);
     };
-  }, [dispatch, selectedWorkspaceId, workspaceId]);
+  }, [dispatch, workspaceId]);
 
   const renderCreateWorkspaceButton = () => {
     return <Box>
@@ -116,7 +116,7 @@ const WorkspaceContent = () => {
   };
 
   const renderWorkspaceContent = () => {
-    if (!selectedWorkspace) {
+    if (!workspaceId) {
       return <Stack spacing={2} component="div" sx={{textAlign: 'center' }}>
         <Typography variant="body1" color="text.primary" align="center">
           Please select a workspace from the sidebar.
@@ -126,6 +126,10 @@ const WorkspaceContent = () => {
         </Typography>
         { renderCreateWorkspaceButton() }
       </Stack>
+    }
+
+    if (!selectedWorkspace) {
+      return null;
     }
 
     return <>

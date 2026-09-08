@@ -12,8 +12,9 @@ export interface SchemaInferencePromptPayload extends ExtractedEntityType {
 export interface OriginalToCanonicalFieldMapping {
   entity_type: string;
   source_file: string;
-  field_name: string;
-  canonical_schema_field_name: string;
+  original_field: string;
+  original_field_name: string;
+  canonical_schema_field: string;
 }
 
 export interface InferredSchema {

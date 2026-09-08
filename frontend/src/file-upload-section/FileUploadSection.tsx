@@ -193,7 +193,7 @@ const FileUploadSection = ({ workspace }: FileUploadSectionProps) => {
 	const [isDragging, setIsDragging] = useState(false);
 	const [toast, setToast] = useState<string | null>(null);
 	const fileInputRef = useRef<HTMLInputElement>(null);
-  const [workspaceState, setWorkspaceState] = useState<string>(workspace.state);
+  const workspaceState = workspace.state;
 
 	useEffect(() => {
 		if (workspace.state === 'DRAFT') {
@@ -205,7 +205,6 @@ const FileUploadSection = ({ workspace }: FileUploadSectionProps) => {
       setUploadBundle([]);
       setUploadState('idle');
       setUploadProgress(0);
-      setWorkspaceState(workspace.state);
 			try {
 				const response = await fetch(`/api/v1/workspaces/${workspace.id}/files`);
 				if (!response.ok) {

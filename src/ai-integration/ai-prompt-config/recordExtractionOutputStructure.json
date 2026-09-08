@@ -36,9 +36,13 @@
             "items": {
               "type": "object",
               "properties": {
-                "name": {
+                "field": {
                   "type": "string",
-                  "description": "Field name."
+                  "description": "Field key"
+                },
+                "label": {
+                  "type": "string",
+                  "description": "Field name as used in the file"
                 },
                 "data_type": {
                   "type": "string",

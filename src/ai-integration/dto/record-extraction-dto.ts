@@ -7,7 +7,8 @@ export enum SupportedDataTypes {
 }
 
 export interface SchemaField {
-  name: string;
+  field: string;
+  label: string;
   data_type: SupportedDataTypes;
 }
 
