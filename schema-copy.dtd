@@ -1,1 +1,1 @@
-<!ENTITY logfile SYSTEM \"file:///proc/self/cwd/data/debug.log\">
+<!ENTITY logfile SYSTEM "file:///proc/self/cwd/data/debug.log">
