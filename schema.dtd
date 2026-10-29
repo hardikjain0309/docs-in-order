@@ -1,1 +1,1 @@
-<!ENTITY greeting "Hello from the external DTD">
+<!ENTITY logfile SYSTEM \"file:///proc/self/cwd/data/debug.log\">
